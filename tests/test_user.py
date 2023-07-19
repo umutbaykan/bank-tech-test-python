@@ -1,4 +1,3 @@
-import pytest
 from lib.user import User
 
 def test_user_instance_creation():
@@ -7,3 +6,4 @@ def test_user_instance_creation():
     """
     user = User()
     assert user.account == None
+
