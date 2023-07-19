@@ -1,8 +1,10 @@
 from lib.account import Account
+from lib.printer import Printer
 import pytest
 from datetime import date
-from unittest.mock import Mock
+from unittest.mock import patch, Mock
 from unittest import TestCase
+from io import StringIO
 
 
 class FakeLogs(TestCase):
@@ -141,3 +143,24 @@ class TestInvalidDataTypes:
         with pytest.raises(ValueError) as e:
             account.deposit(data)
         assert str(e.value) == expected_error
+
+
+def test_feature_acceptance_test_specified_in_brief():
+    account = Account()
+    account.deposit(1000, date=date.fromisoformat("2023-01-10"))
+    account.deposit(2000, date=date.fromisoformat("2023-01-13"))
+    account.withdraw(500, date=date.fromisoformat("2023-01-14"))
+    assert account.get_balance() == 2500
+    assert len(account.logs) == 3
+    with patch("sys.stdout", new=StringIO()) as mock_output:
+        Printer.print_statement(account.logs)
+        printed_output = mock_output.getvalue()
+        assert printed_output.index(
+            "date || credit || debit || balance"
+        ) < printed_output.index("14/01/2023 ||  || 500.00 || 2500.00")
+        assert printed_output.index(
+            "14/01/2023 ||  || 500.00 || 2500.00"
+        ) < printed_output.index("13/01/2023 || 2000.00 ||  || 3000.00")
+        assert printed_output.index(
+            "13/01/2023 || 2000.00 ||  || 3000.00"
+        ) < printed_output.index("10/01/2023 || 1000.00 ||  || 1000.00")

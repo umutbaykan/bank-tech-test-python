@@ -37,7 +37,7 @@ class TestPrinterClass(FakeLogs):
         """
         with patch("builtins.print") as mock_print:
             Printer.print_formatted_log(self.fake_log_1)
-            mock_print.assert_called_with("05-06-2000 || 100.50 ||  || 122.57")
+            mock_print.assert_called_with("05/06/2000 || 100.50 ||  || 122.57")
 
     def test_print_formatted_withdraw_log(self):
         """
@@ -45,7 +45,7 @@ class TestPrinterClass(FakeLogs):
         """
         with patch("builtins.print") as mock_print:
             Printer.print_formatted_log(self.fake_log_2)
-            mock_print.assert_called_with("09-06-2000 ||  || 30.20 || 92.37")
+            mock_print.assert_called_with("09/06/2000 ||  || 30.20 || 92.37")
 
     def test_multiple_logs_in_reverse_chronological_order(self):
         """
@@ -56,7 +56,7 @@ class TestPrinterClass(FakeLogs):
             printed_output = mock_output.getvalue()
             assert printed_output.index(
                 "date || credit || debit || balance"
-            ) < printed_output.index("09-06-2000 ||  || 30.20 || 92.37")
+            ) < printed_output.index("09/06/2000 ||  || 30.20 || 92.37")
             assert printed_output.index(
-                "09-06-2000 ||  || 30.20 || 92.37"
-            ) < printed_output.index("05-06-2000 || 100.50 ||  || 122.57")
+                "09/06/2000 ||  || 30.20 || 92.37"
+            ) < printed_output.index("05/06/2000 || 100.50 ||  || 122.57")
