@@ -20,6 +20,8 @@ class Account:
         self.logs.append(log)
 
     def withdraw(self, amount, date=datetime.today()):
+        if not isinstance(amount, (float, int)) or isinstance(amount, bool):
+            raise ValueError("Invalid data.")
         current_balance = self.get_balance()
         if amount > current_balance:
             raise ValueError("Insufficient funds.")

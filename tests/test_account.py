@@ -99,3 +99,22 @@ class TestWithdrawals(FakeLogs):
         assert account.logs[-1].balance == 245
         assert account.logs[-1].debit == 25
         assert account.get_balance() == 245
+
+
+class TestInvalidDataTypes:
+    @pytest.mark.parametrize(
+        "data, expected_error",
+        [
+            (False, "Invalid data."),
+            (True, "Invalid data."),
+            (None, "Invalid data."),
+            ({}, "Invalid data."),
+            (["something"], "Invalid data."),
+            ("string", "Invalid data."),
+        ],
+    )
+    def test_invalid_data_types_for_withdrawal_method(self, data, expected_error):
+        account = Account()
+        with pytest.raises(ValueError) as e:
+            account.withdraw(data)
+        assert str(e.value) == expected_error
