@@ -31,3 +31,14 @@ def test_account_balance_after_deposit():
     account.deposit(100)
     assert account.logs[0].balance == 100
     assert account.get_balance() == 100
+
+
+def test_account_balance_after_multiple_deposits():
+    """
+    Returns the current balance in the account after multiple deposits.
+    """
+    account = Account()
+    account.deposit(100)
+    account.deposit(150)
+    assert account.logs[0].balance == 100
+    assert account.get_balance() == 250
