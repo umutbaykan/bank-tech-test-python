@@ -54,6 +54,16 @@ def test_account_balance_after_multiple_deposits():
     assert account.get_balance() == 250
 
 
+def test_depositing_0_into_account():
+    """
+    Throws a ValueError if user tries to deposit anything <= 0 into account.
+    """
+    account = Account()
+    with pytest.raises(ValueError) as e:
+        account.deposit(0)
+    assert str(e.value) == "You need to deposit an amount higher than 0."
+
+
 class TestWithdrawals(FakeLogs):
     def test_account_withdraw_amount(self):
         """

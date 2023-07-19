@@ -14,6 +14,8 @@ class Account:
             return self.logs[-1].balance
 
     def deposit(self, amount, date=datetime.today()):
+        if amount <= 0:
+            raise ValueError("You need to deposit an amount higher than 0.")
         log = self.logger(credit=amount, balance=self.get_balance(), date=date)
         self.logs.append(log)
 
