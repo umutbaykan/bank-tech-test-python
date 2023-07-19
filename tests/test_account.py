@@ -7,16 +7,8 @@ def test_account_creation():
     Upon initiation, account has no logs and 0 balance.
     """
     account = Account()
-    assert account.balance == 0
+    assert account.get_balance() == 0
     assert account.logs == []
-
-
-def test_account_balance_override():
-    """
-    Account balance can be overridden upon initiation.
-    """
-    account = Account(balance=100)
-    assert account.balance == 100
 
 
 def test_account_deposit_amount():
@@ -28,3 +20,14 @@ def test_account_deposit_amount():
     account.deposit(100, date=fake_date)
     assert len(account.logs) == 1
     assert account.logs[0].date == fake_date
+    assert account.logs[0].balance == 100
+
+
+def test_account_balance_after_deposit():
+    """
+    Returns the current balance in the account based on log history.
+    """
+    account = Account()
+    account.deposit(100)
+    assert account.logs[0].balance == 100
+    assert account.get_balance() == 100
