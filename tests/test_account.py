@@ -114,7 +114,30 @@ class TestInvalidDataTypes:
         ],
     )
     def test_invalid_data_types_for_withdrawal_method(self, data, expected_error):
+        """
+        Tests whether the method throws errors if data type is incorrect.
+        """
         account = Account()
         with pytest.raises(ValueError) as e:
             account.withdraw(data)
+        assert str(e.value) == expected_error
+
+    @pytest.mark.parametrize(
+        "data, expected_error",
+        [
+            (False, "Invalid data."),
+            (True, "Invalid data."),
+            (None, "Invalid data."),
+            ({}, "Invalid data."),
+            (["something"], "Invalid data."),
+            ("string", "Invalid data."),
+        ],
+    )
+    def test_invalid_data_types_for_deposit_method(self, data, expected_error):
+        """
+        Tests whether the method throws errors if data type is incorrect.
+        """
+        account = Account()
+        with pytest.raises(ValueError) as e:
+            account.deposit(data)
         assert str(e.value) == expected_error
