@@ -16,3 +16,10 @@ class Account:
     def deposit(self, amount, date=datetime.today()):
         log = self.logger(credit=amount, balance=self.get_balance(), date=date)
         self.logs.append(log)
+
+    def withdraw(self, amount, date=datetime.today()):
+        current_balance = self.get_balance()
+        if amount > current_balance:
+            raise ValueError("Insufficient funds.")
+        log = self.logger(debit=amount, balance=current_balance, date=date)
+        self.logs.append(log)

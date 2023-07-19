@@ -1,5 +1,15 @@
 from lib.account import Account
+import pytest
 from datetime import date
+from unittest.mock import Mock
+from unittest import TestCase
+
+
+class FakeLogs(TestCase):
+    def setUp(self):
+        self.fake_deposit = Mock()
+        self.fake_deposit.credit = 200
+        self.fake_deposit.balance = 300
 
 
 def test_account_creation():
@@ -13,7 +23,7 @@ def test_account_creation():
 
 def test_account_deposit_amount():
     """
-    Creates and adds a log object to the account logs.
+    Creates and adds a deposit log object to the account logs.
     """
     account = Account()
     fake_date = date.fromisoformat("2000-06-05")
@@ -42,3 +52,40 @@ def test_account_balance_after_multiple_deposits():
     account.deposit(150)
     assert account.logs[0].balance == 100
     assert account.get_balance() == 250
+
+
+class TestWithdrawals(FakeLogs):
+    def test_account_withdraw_amount(self):
+        """
+        Creates and adds a withdrawal log object to the account logs.
+        """
+        account = Account(logs=[self.fake_deposit])
+        fake_date = date.fromisoformat("2000-06-05")
+        account.withdraw(30, date=fake_date)
+        assert len(account.logs) == 2
+        assert account.logs[-1].date == fake_date
+        assert account.logs[-1].balance == 270
+        assert account.logs[-1].debit == 30
+
+    def test_account_withdraw_when_balance_is_insufficient(self):
+        """
+        Throws a ValueError if withdrawn amount is higher than account balance
+        """
+        account = Account()
+        with pytest.raises(ValueError) as e:
+            account.withdraw(100)
+        assert str(e.value) == "Insufficient funds."
+        assert len(account.logs) == 0
+        assert account.get_balance() == 0
+
+    def test_multiple_withdrawals(self):
+        """
+        Returns the final balance after multiple withdrawals are made
+        """
+        account = Account(logs=[self.fake_deposit])
+        account.withdraw(30)
+        account.withdraw(25)
+        assert len(account.logs) == 3
+        assert account.logs[-1].balance == 245
+        assert account.logs[-1].debit == 25
+        assert account.get_balance() == 245
